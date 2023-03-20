@@ -1,6 +1,5 @@
 package com.ss.remoting.transport.socket;
 
-
 import com.ss.config.RpcServiceConfig;
 import com.ss.factory.SingletonFactory;
 import com.ss.provider.ServiceProvider;
