@@ -1,5 +1,7 @@
 package com.ss.registry.zk.utils;
 
+import com.ss.enums.RpcConfigEnum;
+import com.ss.utils.PropertiesFileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
@@ -7,10 +9,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.zookeeper.CreateMode;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -105,5 +104,10 @@ public final class CuratorUtils {
             }
         });
         log.info("All registered services on the server are cleared:[{}]", REGISTERED_PATH_SET.toString());
+    }
+
+    public static CuratorFramework getZkClient() {
+        // check if user has set zk address
+        Properties properties= PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
     }
 }
