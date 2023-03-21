@@ -22,7 +22,7 @@ public class SocketRpcServer {
      * @param rpcServiceConfig 服务信息类
      */
     public void registerService(RpcServiceConfig rpcServiceConfig){
-
+        serviceProvider.publishService(rpcServiceConfig);
     }
 
     /**

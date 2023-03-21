@@ -3,14 +3,19 @@ package com.ss.registry.zk.utils;
 import com.ss.enums.RpcConfigEnum;
 import com.ss.utils.PropertiesFileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Curator(zookeeper client) utils
@@ -29,7 +34,7 @@ public final class CuratorUtils {
 
     /**
      * Create persistent nodes. Unlike temporary nodes, persistent nodes are not removed when the client disconnects
-     * @param curatorFramework 用于操作zookeeper的节点
+     * @param zkClient 用于操作zookeeper的节点
      * @param path 节点的地址
      */
     public static void createPersistentNode(CuratorFramework zkClient,String path){
@@ -109,5 +114,26 @@ public final class CuratorUtils {
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
         Properties properties= PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
+        String zookeeperAddress=properties!=null && properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue())!=null ? properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue()) : DEFAULT_ZOOKEEPER_ADDRESS;
+        //当zkClient启动的时候直接返回
+        if (zkClient!=null && zkClient.getState()== CuratorFrameworkState.STARTED){
+            return zkClient;
+        }
+        //重试策略,每1000秒重试最多重试3次
+        RetryPolicy retryPolicy=new ExponentialBackoffRetry(BASE_SLEEP_TIME,MAX_RETRIES);
+        CuratorFramework zkClient= CuratorFrameworkFactory.builder()
+                .connectString(zookeeperAddress)
+                .retryPolicy(retryPolicy)
+                .build();
+        zkClient.start();
+        try {
+            //等待30秒直到连接到zookeeper
+            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)){
+                throw new RuntimeException("Time out waiting to connect to ZK!");
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        return zkClient;
     }
 }
