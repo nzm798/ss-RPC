@@ -81,7 +81,7 @@ public final class ExtensionLoader<T> {
         if (instance==null){
             try {
                 EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
-                instance=(T) EXTENSION_INSTANCES.get(name);
+                instance=(T) EXTENSION_INSTANCES.get(clazz);
             }catch (Exception e){
                 log.error(e.getMessage());
             }
