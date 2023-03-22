@@ -117,6 +117,7 @@ public final class ExtensionLoader<T> {
             ClassLoader classLoader=ExtensionLoader.class.getClassLoader();
             urls=classLoader.getResources(filename); //方便地获取打包在 JAR 文件中的资源文件的地址，而不用考虑资源文件实际存放在哪个目录或 JAR 文件中。
             if (urls!=null){
+                // 有点问题
                 while (urls.hasMoreElements()){
                     URL resourceUrl=urls.nextElement();
                     loadResource(extensionClasses, classLoader, resourceUrl);
