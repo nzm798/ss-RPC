@@ -24,7 +24,7 @@ public class GzipCompressTest {
                 .group("group1")
                 .version("version1")
                 .build();
-        Serialize kryoSerialize=ExtensionLoader.getExtensionLoader(Serialize.class).getExtension(SerializationTypeEnum.KRYO.getName());
+        Serialize kryoSerialize=ExtensionLoader.getExtensionLoader(Serialize.class).getExtension(SerializationTypeEnum.HESSIAN.getName());
         byte[] rpcRequestSerialize= kryoSerialize.serialize(rpcRequest);
         byte[] rpcRequestCompress=compress.compress(rpcRequestSerialize);
         byte[] resulr=compress.decompress(rpcRequestCompress);

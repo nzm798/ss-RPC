@@ -1,3 +1,0 @@
-kryo=com.ss.serialize.kryo.KryoSerializer
-protostuff=com.ss.serialize.protostuff.ProtostuffSerializer
-hessian=com.ss.serialize.hessian.HessianSerializer
