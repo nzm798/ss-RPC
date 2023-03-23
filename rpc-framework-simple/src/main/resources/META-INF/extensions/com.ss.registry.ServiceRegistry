@@ -1,1 +1,1 @@
-zk=com.javaguide.ss.zk.ZkServiceRegistryImpl
+zk=com.ss.registry.zk.ZkServiceRegistryImpl
