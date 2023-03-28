@@ -34,6 +34,7 @@ public class RpcResponse<T> implements Serializable {
         RpcResponse<T> response=new RpcResponse<>();
         response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());
         response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());
+        response.setRequestId(requestId);
         if (null != data){
             response.setData(data);
         }
